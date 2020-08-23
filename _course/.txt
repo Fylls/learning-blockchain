@@ -1,0 +1,11 @@
+Note on the Introductory Videos
+
+Again, welcome to this course on building a blockchain and a cryptocurrency.
+By the end of this course, you will know how blockchains work at the core, and how cryptocurrencies like Bitcoin are implemented.
+
+The next few videos introduce the core concepts of the Blockchain and cryptocurrencies.
+You will find them helpful if you want a more well-rounded understanding of the main features of both the blockchain and cryptocurrencies.
+
+The code starts in the next section, but I recommend watching these introductory videos in order to see the main concepts that we’ll be focusing on when it comes to building blockchains and cryptocurrencies.
+
+Alright, let’s get to it!
