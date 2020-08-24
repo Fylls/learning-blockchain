@@ -9,7 +9,7 @@
 <br>
 <br>
 
-<p>Want to sell Weed online? Here is the best way to do it, and nobody could ever figure it out!</p>
+<p>Want to sell illegal things online? Here is the best way to do it, and nobody could ever figure it out!</p>
 
 <br>
 
