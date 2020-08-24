@@ -1,4 +1,5 @@
 const Block = require("./Block")
+const Blockchain = require("./Blockchain")
 
 // Testing the .toString() implementation
 const block = new Block("foo", "bar", "zoo", "baz")

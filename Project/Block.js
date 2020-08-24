@@ -35,6 +35,13 @@ class Block {
     return SHA256(`${timestamp}${lastHash}${data}`).toString()
   }
 
+  // Checking block hash]
+  // hashes should not be artificial and are verifiable against algorithm
+  static blockHash(block) {
+    const { timestamp, lastHash, data } = block
+    return Block.hash(timestamp, lastHash, data)
+  }
+
   // using it directly "Block.mineBlock()"
   static mineBlock(lastBlock, data) {
     const timestamp = Date.now() // UNIX time
