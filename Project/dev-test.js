@@ -1,16 +1,10 @@
-const Block = require("./Block")
+const Block = require("./Blockchain/block")
 const Blockchain = require("./Blockchain")
 
-// Testing the .toString() implementation
-const block = new Block("foo", "bar", "zoo", "baz")
-console.log("============== Example ==============\n")
-console.log(block.toString())
+const bc = new Blockchain()
 
-// Testing the creation of the Genesis Block
-console.log("\n============== Genesis ==============\n")
-console.log(Block.genesis().toString())
+// adding 10 blocs to the chain
 
-// Testing the creation of a new block
-const fooBlock = Block.mineBlock(Block.genesis(), "foo")
-console.log("\n============== New Foo ==============\n")
-console.log(fooBlock.toString())
+for (let i = 0; i < 10; i++) {
+  console.log(bc.addBlock(`foo ${i}`).toString())
+}
