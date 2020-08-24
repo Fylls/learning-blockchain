@@ -1,5 +1,5 @@
-const Blockchain = require("./Blockchain")
-const Block = require("./Block")
+const Blockchain = require("./index")
+const Block = require("./block")
 
 describe("Blockchain", () => {
   let bc, bc2
@@ -52,7 +52,7 @@ describe("Blockchain", () => {
 
   it("does not replace invalid chain", () => {
     bc2.addBlock("data")
-    bc2.chain[0].data = "bad data"
+    bc2.chain[0].data = "Bad Data"
     bc.replaceChain(bc2.chain)
     expect(bc.chain).not.toEqual(bc2.chain)
   })
