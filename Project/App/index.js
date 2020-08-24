@@ -5,13 +5,17 @@
 
 // So as we add more features to our blood chain will continue to grow this API.
 
+// Dependencies
 const express = require("express")
 const Blockchain = require("../Blockchain")
+const P2pServer = require("./p2p-server")
 
-const bc = new Blockchain()
-
-//  Init + Middlewares
+// Globals
 const app = express()
+const bc = new Blockchain()
+const p2pServer = new P2pServer(bc)
+
+// Middlewares
 app.use(express.json())
 
 // Home Route
@@ -24,8 +28,17 @@ app.get("/blocks", (req, res) => res.json(bc.chain))
 app.post("/mine", (req, res) => {
   const block = bc.addBlock(req.body.data)
   console.log(`New block was added: ${block.toString()}`)
+
+  p2pServer.syncChains()
+
   res.redirect("/blocks")
 })
 
-const PORT = process.env.HTTP_PORT || 3001
-app.listen(PORT, () => console.log(`listening on port:${PORT}`))
+// Starting Express Server
+const HTTP_PORT = process.env.HTTP_PORT || 3001
+app.listen(HTTP_PORT, () =>
+  console.log(`Listening for API connections on port:${HTTP_PORT}`)
+)
+
+// Starting WebSocket Server
+p2pServer.listen()
