@@ -29,8 +29,14 @@ class Wallet {
     return this.keyPair.sign(dataHash)
   }
 
-  //   A transaction pool we'll collect all transactions submitted by individuals in the cryptocurrency network.
+  // A transaction pool we'll collect all transactions submitted by individuals in the cryptocurrency network.
   // Then miners will do the work of taking transactions from the pool and including them in the blotching.
+
+  createTransaction(recipient, amount, transactionPool) {
+    if (amount > this.balance) {
+      return console.log(`Amount ${amount} exceeds balance: ${this.balance}`)
+    }
+  }
 }
 
 module.exports = Wallet
