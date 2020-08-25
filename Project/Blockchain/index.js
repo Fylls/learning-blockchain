@@ -28,6 +28,7 @@ class Blockchain {
     for (let i = 1; i < chain.length; i++) {
       const block = chain[i]
       const lastBlock = chain[i - 1]
+
       if (
         block.lastHash !== lastBlock.hash || // hashes pointing to the right place
         block.hash !== Block.blockHash(block) // hashes are not artificial and can be verified against algorithm
@@ -45,11 +46,9 @@ class Blockchain {
 
   replaceChain(newChain) {
     if (newChain.length <= this.chain.length) {
-      console.log("recieved chain is shorter or equal to the current chain")
-      return
+      return console.log("recieved chain is less or equal to the current chain")
     } else if (!this.isValidChain(newChain)) {
-      console.log("the received chain is not valid")
-      return
+      return console.log("the received chain is not valid")
     }
 
     console.log("replacing blockchain with the new chain")

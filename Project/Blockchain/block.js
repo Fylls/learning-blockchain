@@ -1,10 +1,4 @@
-const SHA256 = require("crypto-js/sha256")
-
-// Secure Hash Algorith SHA - 256bits => 32 bytes => 32 characters
-// Even if one character changes in original data, algorithm produce new unique string of character
-// BUT same output for same inital data, since we use a changing timestamp, this will never happen
-// Pretty much impossible to dectypt the hash (One-Way)
-// this function links hashes together, making possible blockchain
+const ChainUtil = require("../chain-util")
 
 const { DIFFICULTY, MINE_RATE } = require("../config")
 
@@ -28,8 +22,8 @@ class Block {
   toString() {
     return `Block - 
       Timestamp   :   ${this.timestamp}
-      Last Hash   :   ${this.lastHash.substring(0, 10)}...
-      Hash        :   ${this.hash.substring(0, 10)}...
+      Last Hash   :   ${this.lastHash.substring(0, 10)} ...
+      Hash        :   ${this.hash.substring(0, 10)} ...
       Nonce       :   ${this.nonce}
       Difficulty  :   ${this.difficulty}
       Data        :   ${this.data}`
@@ -45,7 +39,7 @@ class Block {
   // represents unique data we want to get the hash for
 
   static hash(timestamp, lastHash, data, nonce, difficulty) {
-    return SHA256(
+    return ChainUtil.hash(
       `${timestamp}${lastHash}${data}${nonce}${difficulty}`
     ).toString()
   }
