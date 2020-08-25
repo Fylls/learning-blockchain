@@ -28,6 +28,9 @@ class Wallet {
   sign(dataHash) {
     return this.keyPair.sign(dataHash)
   }
+
+  //   A transaction pool we'll collect all transactions submitted by individuals in the cryptocurrency network.
+  // Then miners will do the work of taking transactions from the pool and including them in the blotching.
 }
 
 module.exports = Wallet
