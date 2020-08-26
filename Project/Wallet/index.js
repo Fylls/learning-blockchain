@@ -1,6 +1,8 @@
 const { INITIAL_BALANCE } = require("../config")
 
 const ChainUtil = require("../chain-util")
+const Transaction = require("./transaction")
+const TransactionPool = require("./transaction-pool")
 
 // With this ChainUtil module we can use a static gen-key pair method to
 // create a key-pair object within the construct of this wallet.
@@ -36,6 +38,17 @@ class Wallet {
     if (amount > this.balance) {
       return console.log(`Amount ${amount} exceeds balance: ${this.balance}`)
     }
+
+    let transaction = transactionPool.existingTransaction(this.publicKey)
+
+    if (transaction) {
+      transaction.update(this, recipient, amount)
+    } else {
+      transaction = Transaction.newTransaction(this, recipient, amount)
+      transactionPool.updateOrAddTransaction(transaction)
+    }
+
+    return transaction
   }
 }
 

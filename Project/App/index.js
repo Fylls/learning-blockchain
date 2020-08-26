@@ -7,13 +7,20 @@
 
 // Dependencies
 const express = require("express")
+const TransactionPool = require("../Wallet/transaction-pool")
 const Blockchain = require("../Blockchain")
 const P2pServer = require("./p2p-server")
+const Wallet = require("../Wallet")
+
+// Config
+const HTTP_PORT = process.env.HTTP_PORT || 3001
 
 // Globals
 const app = express()
+const w = new Wallet()
 const bc = new Blockchain()
-const p2pServer = new P2pServer(bc)
+const tp = new TransactionPool()
+const p2pServer = new P2pServer(bc, tp)
 
 // Middlewares
 app.use(express.json())
@@ -34,10 +41,26 @@ app.post("/mine", (req, res) => {
   res.redirect("/blocks")
 })
 
+// Transactions
+app.get("/transactions", (req, res) => {
+  res.json(tp.transactions)
+})
+
+app.post("/transact", (req, res) => {
+  const { recipient, amount } = req.body
+
+  const transaction = w.createTransaction(recipient, amount, tp)
+  p2pServer.broadTransaction(transaction)
+
+  res.redirect("/transactions")
+})
+
+// Exposing PublicKey of client
+app.get("/public-key", (req, res) => res.json({ publicKey: w.publicKey }))
+
 // Starting Express Server
-const HTTP_PORT = process.env.HTTP_PORT || 3001
 app.listen(HTTP_PORT, () =>
-  console.log(`Listening for API connections on port:${HTTP_PORT}`)
+  console.log(`Listening for connections to API on port: ${HTTP_PORT}\n`)
 )
 
 // Starting WebSocket Server
