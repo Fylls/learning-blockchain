@@ -1,6 +1,6 @@
 <div align="center">
 
-# Workout: Blockchain
+# Learning: Blockchain
 
 <p>The idea and the technology behind is amazing, hopefully its implication as well!</p>
 
