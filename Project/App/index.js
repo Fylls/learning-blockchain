@@ -7,10 +7,13 @@
 
 // Dependencies
 const express = require("express")
+
+// Classes
 const TransactionPool = require("../Wallet/transaction-pool")
 const Blockchain = require("../Blockchain")
 const P2pServer = require("./p2p-server")
 const Wallet = require("../Wallet")
+const Miner = require("./miner")
 
 // Config
 const HTTP_PORT = process.env.HTTP_PORT || 3001
@@ -21,6 +24,7 @@ const w = new Wallet()
 const bc = new Blockchain()
 const tp = new TransactionPool()
 const p2pServer = new P2pServer(bc, tp)
+const miner = new Miner(w, p2pServer, bc, tp)
 
 // Middlewares
 app.use(express.json())
@@ -28,35 +32,36 @@ app.use(express.json())
 // Home Route
 app.get("/", (req, res) => res.send("server is working"))
 
-// Block Routes
-// getting all the blocks in the blackchain
+// Exposing PublicKey of client
+app.get("/public-key", (req, res) => res.json({ publicKey: w.publicKey }))
+
+// Getting all the blocks in the blackchain
 app.get("/blocks", (req, res) => res.json(bc.chain))
 
-app.post("/mine", (req, res) => {
-  const block = bc.addBlock(req.body.data)
-  console.log(`New block was added: ${block.toString()}`)
+// View all transactions in transaction-pool
+app.get("/transactions", (req, res) => res.json(tp.transactions))
 
-  p2pServer.syncChains()
-
-  res.redirect("/blocks")
-})
-
-// Transactions
-app.get("/transactions", (req, res) => {
-  res.json(tp.transactions)
-})
-
+// Adding a new unconfirmed Transaction
 app.post("/transact", (req, res) => {
   const { recipient, amount } = req.body
-
-  const transaction = w.createTransaction(recipient, amount, tp)
-  p2pServer.broadTransaction(transaction)
-
+  const transaction = w.createTransaction(recipient, amount, bc, tp)
+  p2pServer.broadcastClearTransactions(transaction)
   res.redirect("/transactions")
 })
 
-// Exposing PublicKey of client
-app.get("/public-key", (req, res) => res.json({ publicKey: w.publicKey }))
+// Create a block and sync all blockchains once mined correctly
+app.post("/mine", (req, res) => {
+  const block = bc.addBlock(req.body.data)
+  console.log(`New block was added: ${block.toString()}`)
+  p2pServer.syncChains()
+  res.redirect("/blocks")
+})
+
+app.get("/mine-transactions", (req, res) => {
+  const block = miner.mine()
+  console.log(`New block was added: ${block.toString()}`)
+  res.redirect("/blocks")
+})
 
 // Starting Express Server
 app.listen(HTTP_PORT, () =>
